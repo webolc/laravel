@@ -1,22 +1,21 @@
 <?php
 namespace App\Http\Controllers\Admin\V1;
 
-use App\Http\Controllers\Common\V1\LoginTrait;
-use App\Http\Controllers\Common\CommonController;
+use App\Library\Rpc\Client AS RpcClient;
+use App\Http\Controllers\Admin\AdminController;
 
-class LoginController extends CommonController{
-    use LoginTrait;
+class LoginController extends AdminController{
     
     public function index(){
-        return $this->toTrait($this->_index());
+        return $this->failed('还未登陆,请先登录');
     }
     public function login(){
-        return $this->toTrait($this->_login());
+        return $this->toRpc(RpcClient::SocketToErp($this->current_version,'LoginService','login',$this->request->input()));
     }
     public function register(){
-        return $this->toTrait($this->_register());
+        return $this->toRpc(RpcClient::SocketToErp($this->current_version,'LoginService','register',$this->request->input()));
     }
     public function logout(){
-        return $this->toTrait($this->_logout());
+        return $this->toRpc(RpcClient::SocketToErp($this->current_version,'LoginService','logout',$this->request->input()));
     }
 }

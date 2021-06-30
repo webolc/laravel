@@ -1,9 +1,9 @@
 <?php
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Common\CommonController;
+use App\Http\Controllers\Api\ApiController;
 
-class IndexController extends CommonController{
+class IndexController extends ApiController{
     
     public function index(){
         return $this->success('Api');

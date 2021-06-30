@@ -1,20 +1,19 @@
 <?php
 namespace App\Http\Controllers\Web\V1;
 
-use App\Http\Controllers\Common\V1\LoginTrait;
+use App\Library\Rpc\Client AS RpcClient;
 use App\Http\Controllers\Web\WebController;
 
 class LoginController extends WebController{
-    use LoginTrait;
     
     public function index(){
         return $this->view();
     }
     public function login(){
-        return $this->toTrait($this->_login());
+        return $this->toRpc(RpcClient::SocketToErp($this->current_version,'LoginService','login',$this->request->input()));
     }
     public function register(){
-        return $this->toTrait($this->_register());
+        return $this->toRpc(RpcClient::SocketToErp($this->current_version,'LoginService','register',$this->request->input()));
     }
     public function logout(){
         $res = $this->_logout();

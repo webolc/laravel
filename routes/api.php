@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::group(['prefix'=>'v1','middleware'=>'throttle:30,20'],function(){
     Route::any('/','IndexController@index')->name('api.index');
-
+    
     Route::prefix('login')->group(function () {
         Route::any('/','LoginController@index')->name('api.login');
         Route::post('/login','LoginController@login')->name('api.login.login');
