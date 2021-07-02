@@ -7,7 +7,7 @@
  * @return array
  */
 function succBack($msg='success',$data=[],$code=1000){
-    return backData(1, $msg, $data, $code);
+    return backData(true, $msg, $data, $code);
 }
 /**
  * 返回失败数据
@@ -17,7 +17,7 @@ function succBack($msg='success',$data=[],$code=1000){
  * @return array
  */
 function errBack($msg='error',$data=[],$code=4000){
-    return backData(0, $msg, $data, $code);
+    return backData(false, $msg, $data, $code);
 }
 /**
  * 数据返回
@@ -29,7 +29,7 @@ function errBack($msg='error',$data=[],$code=4000){
  */
 function backData($status,$msg,$data,$code){
     return [
-        'status' => $status,
+        'status' => $status?1:0,
         'msg' => $msg,
         'data' => $data,
         'code' => $code

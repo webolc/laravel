@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::any('/','IndexController@index')->name('admin.index');
 Route::prefix('login')->group(function () {
-    Route::any('/','LoginController@index')->name('admin.login');
+    Route::any('/','LoginController@index')->name('admin.login.index');
     Route::post('/login','LoginController@login')->name('admin.login.login');
     Route::post('/reg','LoginController@register')->name('admin.login.reg');
 });

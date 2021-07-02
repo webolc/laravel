@@ -41,6 +41,7 @@ class RouteServiceProvider extends ServiceProvider
             
             Route::domain('admin.'.config('base.domain'))->middleware('admin')->namespace($this->namespace.'\\Admin\\V1')->group(base_path('routes/admin.php'));
             
+            Route::domain('www.'.config('base.domain'))->middleware('web')->namespace($this->namespace.'\\Web\\V1')->group(base_path('routes/web.php'));
             Route::domain(config('base.domain'))->middleware('web')->namespace($this->namespace.'\\Web\\V1')->group(base_path('routes/web.php'));
         });
     }

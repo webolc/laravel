@@ -1,12 +1,23 @@
 <?php
 namespace App\Services\V1;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Log;
+
 class LoginService{
+    
+    protected $params;
+    
+    public function __construct($params=[]){
+        Log::debug('parms',$params);
+        $this->params = $params;
+    }
     /**
      * 获取用户详情
      */
     public function find(){
-        $info = $this->request->user();
+        $user_id = $this->params['user_id']??0;
+        $info = (new User())->_find($user_id);
         if ($info){
             return succBack('获取成功',$info);
         }

@@ -16,7 +16,8 @@ class Authenticate extends Middleware
     {
         if (! $request->expectsJson()) {
             $host = str_replace(config('base.domain'), '', $request->getHost());
-            return route($host.'login');
+            $host = $host=='www.'?'':$host;
+            return route($host.'login.index');
         }
     }
 }

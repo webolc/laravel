@@ -10,12 +10,12 @@ class LoginController extends ApiController{
         return $this->failed('还未登陆,请先登录');
     }
     public function login(){
-        return $this->toRpc(RpcClient::SocketToErp($this->current_version,'LoginService','login',$this->request->input()));
+        return $this->toRpc(RpcClient::SocketToRpc($this->current_version,'LoginService','login',$this->request->input()));
     }
     public function register(){
-        return $this->toRpc(RpcClient::SocketToErp($this->current_version,'LoginService','register',$this->request->input()));
+        return $this->toRpc(RpcClient::SocketToRpc($this->current_version,'LoginService','register',$this->request->input()));
     }
     public function logout(){
-        return $this->toRpc(RpcClient::SocketToErp($this->current_version,'LoginService','logout',$this->request->input()));
+        return $this->toRpc(RpcClient::SocketToRpc($this->current_version,'LoginService','logout',$this->request->input()));
     }
 }

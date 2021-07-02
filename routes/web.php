@@ -14,9 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 Route::any('/','IndexController@index');
 Route::prefix('login')->group(function () {
-    Route::get('/','LoginController@index')->name('login');
-    Route::post('/login','LoginController@login')->name('login.login');
-    Route::post('/reg','LoginController@register')->name('login.reg');
+    Route::get('/','LoginController@index')->name('login.index');
+    Route::any('/login','LoginController@login')->name('login.login');
+    Route::any('/reg','LoginController@register')->name('login.reg');
 });
 // 需要授权的接口
 Route::group(['middleware' => 'auth'], function () {

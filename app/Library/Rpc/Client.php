@@ -6,7 +6,8 @@ use Thrift\Protocol\TMultiplexedProtocol;
 use Thrift\Transport\TBufferedTransport;
 use Thrift\Transport\TSocket;
 use App\Library\Thrift\ThriftCommonCallServiceClient;
-use App\Helpers\HttpRespons;
+use App\Helpers\HttpResponse;
+use phpDocumentor\Reflection\Types\This;
 
 class Client
 {
@@ -22,9 +23,10 @@ class Client
     private function __construct($type)
     {
         $config = [
-            'erp' => [
+            'rpc' => [
                 'host' => config('base.rpc.host'),
-                'port' => config('base.rpc.port')
+                'port' => config('base.rpc.port'),
+                'pass' => config('base.rpc.pass'),
             ]
         ];
         $this->config = $config[$type];
@@ -64,10 +66,11 @@ class Client
             $transport->open();
             // 拼装参数与类型
             $data = [
-                'version' => $args[0],
+                'pass'        => $this->config['pass'],
+                'version'     => $args[0],
                 'serviceName' => $args[1],
-                'methodName' => $args[2],
-                'params' => $args[3]
+                'methodName'  => $args[2],
+                'params'      => $args[3]
             ];
             $result = $client->invokeMethod(json_encode($data));
             $result->data = json_decode($result->data, true);
@@ -75,7 +78,7 @@ class Client
             return $result;
         } catch (\TException $Te) {
             app('log')->error('服务连接失败 ', ['host' => $this->config, 'parms' => $args, 'content' => $Te->getMessage()]);
-            return ['code' => HttpRespons::RPC_CONNECT_FAIL, 'msg' => 'error', 'data' => $Te->getMessage()];
+            return ['code' => HttpResponse::RPC_CONNECT_FAIL, 'msg' => 'error', 'data' => $Te->getMessage()];
         }
     }
 }

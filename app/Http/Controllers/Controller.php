@@ -8,7 +8,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Response;
-use App\Helpers\HttpRespons;
+use App\Helpers\HttpResponse;
 
 class Controller extends BaseController
 {
@@ -18,11 +18,10 @@ class Controller extends BaseController
     /**
      * @var int
      */
-    protected $httpCode = HttpRespons::HTTP_OK;
+    protected $httpCode = HttpResponse::HTTP_OK;
     
     public function __construct(){
         $this->request = request();
-        
     }
     /**
      * @return mixed
@@ -133,7 +132,7 @@ class Controller extends BaseController
         }else{
             $res['data'] = $res['msg'];
         }
-        if ($res['status']){
+        if ($res['status'] == HttpResponse::CALL_SUCCESS){
             return $this->success($res['data'],$res['code']);
         }
         return $this->failed($res['data'],$res['code']);
@@ -144,13 +143,13 @@ class Controller extends BaseController
      * @return mixed
      */
     public function toRpc($res){
-        if ($res['code'] == HttpResponse::HTTP_OK){
-            return $this->success($res['data']['data'],$res['data']['code']);
+        if ($res->code == HttpResponse::HTTP_OK){
+            return $this->toTrait($res->data);
         }
-        if (!$res['data']){
-            $res['data'] = $res['msg'];
+        if ($res->data){
+            return $this->failed($res->data,$res->code);
         }
-        return $this->failed($res['data'],$res['code']);
+        return $this->failed($res->msg,$res->code);
     }
     /**
      * 获取当前控制器和方法
