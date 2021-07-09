@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::any('/','IndexController@index')->name('admin.index');
 Route::prefix('login')->group(function () {
     Route::any('/','LoginController@index')->name('admin.login.index');
     Route::post('/login','LoginController@login')->name('admin.login.login');
@@ -19,6 +18,7 @@ Route::prefix('login')->group(function () {
 });
 // 需要授权的接口
 Route::group(['middleware' => 'auth:admin'], function () {
+    Route::any('/','IndexController@index')->name('admin.index');
     Route::post('logout','LoginController@logout')->name('admin.login.logout');
     
 });

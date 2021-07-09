@@ -16,7 +16,15 @@ return [
     'paths' => [
         resource_path('views'),
     ],
-
+    
+    'public' => [
+        'css_path' => '/css/',
+        'js_path' => '/js/',
+        'font_path' => '/fonts/',
+        'img_path' => '/imgs/',
+        'web_path' => '/views/'
+    ],
+    
     /*
     |--------------------------------------------------------------------------
     | Compiled View Path

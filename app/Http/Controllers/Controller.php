@@ -15,14 +15,33 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
     
     protected $request;
+    
+    /**
+     * 当前版本
+     * @var string
+     */
+    protected $current_version;
+    
     /**
      * @var int
      */
     protected $httpCode = HttpResponse::HTTP_OK;
     
+    /**
+     * 构造方法
+     */
     public function __construct(){
         $this->request = request();
+        $this->__init();
     }
+    
+    /**
+     * 初始化方法
+     */
+    protected function __init(){
+        $this->current_version = 'V1';
+    }
+    
     /**
      * @return mixed
      */

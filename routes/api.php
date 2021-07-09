@@ -15,7 +15,7 @@ Route::group(['prefix'=>'v1','middleware'=>'throttle:30,20'],function(){
     Route::any('/','IndexController@index')->name('api.index');
     
     Route::prefix('login')->group(function () {
-        Route::any('/','LoginController@index')->name('api.login.index');
+        Route::post('/','LoginController@index')->name('api.login.index');
         Route::post('/login','LoginController@login')->name('api.login.login');
         Route::post('/reg','LoginController@register')->name('api.login.reg');
     });

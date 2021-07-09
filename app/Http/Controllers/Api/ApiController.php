@@ -5,10 +5,7 @@ use App\Http\Controllers\Controller;
 
 class ApiController extends Controller{
     
-    /**
-     * 当前版本
-     * @var string
-     */
-    protected $current_version = 'V1';
-    
+    protected function __init(){
+        $this->current_version = 'V1';
+    }
 }

@@ -3,13 +3,14 @@ namespace App\Services\V1;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use App\Facades\ServiceRequest;
 
 class LoginService{
     
     protected $params;
     
     public function __construct($params=[]){
-        Log::debug('parms',$params);
+        Log::debug('parms',(array)$params);
         $this->params = $params;
     }
     /**
@@ -27,7 +28,9 @@ class LoginService{
      * 用户登录
      */
     public function login(){
-        $info = false;
+        ServiceRequest::verify('login.login',(array)$this->params);
+        
+        $info = true;
         if ($info){
             return succBack('登录成功',$info);
         }
