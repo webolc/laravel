@@ -2,17 +2,17 @@
 namespace App\Services\V1;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Log;
 use App\Facades\ServiceRequest;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\TokenGuard;
 
 class LoginService{
     
     protected $params;
-    
     public function __construct($params=[]){
-        Log::debug('parms',(array)$params);
         $this->params = $params;
     }
+    
     /**
      * 获取用户详情
      */
@@ -28,10 +28,17 @@ class LoginService{
      * 用户登录
      */
     public function login(){
-        ServiceRequest::verify('login.login',(array)$this->params);
-        
-        $info = true;
-        if ($info){
+        ServiceRequest::verify('login.login',$this->params);
+        $info = User::query()->where('name','=',$this->params->login_name)->first();
+        if (!$info){
+            return errBack('账号不存在');
+        }
+        if (!Hash::check($this->params->login_pass,$info->password)){
+            return errBack('密码不正确');
+        }
+        $info->remember_token = Hash::make($info->password.time());
+        $res = $info->save();
+        if ($res){
             return succBack('登录成功',$info);
         }
         return errBack('登录失败');

@@ -24,9 +24,9 @@
         <div id="darkbannerwrap"></div>
         
         <form method="post" class="layui-form" >
-            <input name="username" placeholder="用户名"  type="text" lay-verify="required" class="layui-input" >
+            <input name="login_name" placeholder="用户名"  type="text" lay-verify="required" class="layui-input" >
             <hr class="hr15">
-            <input name="password" lay-verify="required" placeholder="密码"  type="password" class="layui-input">
+            <input name="login_pass" lay-verify="required" placeholder="密码"  type="password" class="layui-input">
             <hr class="hr15">
             <input value="登录" lay-submit lay-filter="login" style="width:100%;" type="submit">
             <hr class="hr20" >
@@ -45,13 +45,12 @@
                       type:'post',
                       data:data.field,
                       dataType:'json',
-                      success:function(data){
-                          console.log(data)
-                    	  layer.msg('登录成功');
-                          if(data.status){window.location.href='/'}
+                      success:function(res){
+                    	  layer.msg(res.data.msg);
+                          //if(data.status){window.location.href='/'}
                       },
                       error:function(e){
-                    	  layer.msg('登录失败');
+                    	  layer.msg('系统错误');
                       }
                   });
                   return false;

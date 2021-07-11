@@ -23,3 +23,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::any('logout','LoginController@logout')->name('login.logout');
     
 });
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');

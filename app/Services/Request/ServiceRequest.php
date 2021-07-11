@@ -3,12 +3,14 @@ namespace App\Services\Request;
 
 use Illuminate\Support\Facades\Validator;
 use App\Exceptions\RpcRequestException;
+use App\Helpers\HttpResponse;
 
 class ServiceRequest{
     /**
      * 验证数据
      */
     public function verify($request,$data){
+        if (is_object($data)){$data = (array)$data;}
         $request = explode('.', $request);
         $request = array_map('ucfirst', $request);
         $request = 'App\\Services\\Request\\'.implode('\\', $request);
@@ -19,11 +21,18 @@ class ServiceRequest{
                 $rule = $class->rule();
             }
             if (method_exists($class,'message')){
-                $rule = $class->message();
+                $message = $class->message();
             }
             $validator = Validator::make($data,$rule,$message);
             if ($validator->fails()) {
-                throw new RpcRequestException($validator->errors());
+                $errors = $validator->errors()->toArray();
+                $error = '';
+                $i=1;
+                foreach ($errors as $e){
+                    $error .=  $i.'、'.implode('，', $e).'；';
+                    $i++;
+                }
+                throw new RpcRequestException($error);
             }
         }else{
             throw new RpcRequestException('验证规则不存在');

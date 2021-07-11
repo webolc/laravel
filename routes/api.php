@@ -20,7 +20,7 @@ Route::group(['prefix'=>'v1','middleware'=>'throttle:30,20'],function(){
         Route::post('/reg','LoginController@register')->name('api.login.reg');
     });
     // 需要授权的接口
-    Route::group(['middleware' => 'auth:api'], function () {
+    Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('logout','LoginController@logout')->name('api.login.logout');
             
     });

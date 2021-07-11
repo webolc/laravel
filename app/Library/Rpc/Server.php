@@ -4,6 +4,7 @@ namespace App\Library\Rpc;
 use App\Library\Thrift\ThriftCommonCallServiceIf;
 use App\Library\Thrift\Response;
 use App\Helpers\HttpResponse;
+use App\Exceptions\RpcRequestException;
 
 class Server implements ThriftCommonCallServiceIf
 {
@@ -16,36 +17,36 @@ class Server implements ThriftCommonCallServiceIf
      */
     public function invokeMethod($params)
     {
-        // 转换字符串 json
-        $params = json_decode($params);
         $response = new Response();
-        $response->data = '';
-        if (1 || $params->pass == config('base.rpc.pass')){
-            if (in_array($params->version, $this->versions)){
-                //检测服务
-                $servicePathName = '\\App\\Services\\'.$params->version.'\\'.$params->serviceName;
-                if (class_exists($servicePathName)) {
-                    $service = new $servicePathName($params->params);
-                    $method = $params->methodName;
-                    if (method_exists($service,$method)){
-                        $res = $service->$method();
-                        $response->code = HttpResponse::HTTP_OK;
-                        $response->data = json_encode($res);
-                    }else{
-                        $response->code = HttpResponse::RPC_METHOD_NOTEXIST;
-                        $response->msg = '方法不存在';
-                    }
-                }else{
-                    $response->code = HttpResponse::RPC_SERVICE_NOTEXIST;
-                    $response->msg = '服务不存在';
-                }
-            }else{
-                $response->code = HttpResponse::RPC_VERSION_NOTEXIST;
-                $response->msg = '版本不存在';
+        try{
+            // 转换字符串 json
+            $params = json_decode($params);
+            
+            if ($params->pass != config('base.rpc.pass')){
+                throw new RpcRequestException('非法访问',HttpResponse::RPC_NOACCESS);
             }
-        }else{
-            $response->code = HttpResponse::RPC_NOACCESS;
-            $response->msg = '非法访问';
+            if (!in_array($params->version, $this->versions)){
+                throw new RpcRequestException('版本不存在',HttpResponse::RPC_VERSION_NOTEXIST);
+            }
+            //检测服务
+            $servicePathName = '\\App\\Services\\'.$params->version.'\\'.$params->serviceName;
+            if (!class_exists($servicePathName)) {
+                throw new RpcRequestException('服务不存在',HttpResponse::RPC_SERVICE_NOTEXIST);
+            }
+            $service = new $servicePathName($params->params);
+            $method = $params->methodName;
+            if (!method_exists($service,$method)){
+                throw new RpcRequestException('方法不存在',HttpResponse::RPC_METHOD_NOTEXIST);
+            }
+            $res = $service->$method();
+            $response->msg = 'success';
+            $response->code = HttpResponse::HTTP_OK;
+            $response->data = json_encode($res);
+            
+        }catch (RpcRequestException $e){
+            $response->data = json_encode(errBack($e->getMessage()));
+            $response->code = $e->getCode();
+            $response->msg = 'error';
         }
         return $response;
     }

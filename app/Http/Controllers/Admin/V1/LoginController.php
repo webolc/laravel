@@ -11,7 +11,13 @@ class LoginController extends AdminController{
         return $this->view();
     }
     public function login(){
-        return $this->toRpc(RpcClient::SocketToRpc($this->current_version,'LoginService','login',$this->request->input()));
+        $info = $this->getRpcData(RpcClient::SocketToRpc($this->current_version,'LoginService','login',$this->request->input()));
+        if ($info['status'] == HttpResponse::CALL_SUCCESS){
+            var_dump($info);die;
+            cookie('api_token',$info['data']['remember_token']);
+            $this->success(['msg'=>'登陆成功']);
+        }
+        return $this->failed(['msg'=>$info['msg']]);
     }
     public function register(){
         return $this->toRpc(RpcClient::SocketToRpc($this->current_version,'LoginService','register',$this->request->input()));

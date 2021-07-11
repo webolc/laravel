@@ -33,6 +33,7 @@ class Controller extends BaseController
     public function __construct(){
         $this->request = request();
         $this->__init();
+        
     }
     
     /**
@@ -98,7 +99,7 @@ class Controller extends BaseController
      * @param string $status
      * @return mixed
      */
-    public function failed($data, $statusCode = 4000, $httpCode = HttpResponse::HTTP_BAD_REQUEST, $status = 'error')
+    public function failed($data, $statusCode = HttpResponse::CALL_ERROR, $httpCode = HttpResponse::HTTP_OK, $status = 'error')
     {
         return $this->status($httpCode, $statusCode, ['data' => $data], $status);
     }
@@ -110,7 +111,7 @@ class Controller extends BaseController
      * @param int $statusCode
      * @return mixed
      */
-    public function success($data, $statusCode = 1000, $httpCode = HttpResponse::HTTP_OK, $status = "success")
+    public function success($data, $statusCode = HttpResponse::CALL_SUCCESS, $httpCode = HttpResponse::HTTP_OK, $status = "success")
     {
         // 简化分页显示
         if ($data instanceof AnonymousResourceCollection && $data->resource instanceof LengthAwarePaginator) {
@@ -149,12 +150,12 @@ class Controller extends BaseController
                 'data' => $res['data']
             ];
         }else{
-            $res['data'] = $res['msg'];
+            $res['data'] = ['msg'=>$res['msg']];
         }
         if ($res['status'] == HttpResponse::CALL_SUCCESS){
-            return $this->success($res['data'],$res['code']);
+            return $this->success($res['data']);
         }
-        return $this->failed($res['data'],$res['code']);
+        return $this->failed($res['data']);
     }
     /**
      * 输出RPC返回数据
@@ -166,9 +167,9 @@ class Controller extends BaseController
             return $this->toTrait($res->data);
         }
         if ($res->data){
-            return $this->failed($res->data,$res->code);
+            return $this->failed($res->data);
         }
-        return $this->failed($res->msg,$res->code);
+        return $this->failed(['msg'=>$res->msg]);
     }
     /**
      * 获取当前控制器和方法

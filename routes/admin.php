@@ -18,7 +18,7 @@ Route::prefix('login')->group(function () {
 });
 // 需要授权的接口
 Route::group(['middleware' => 'auth:admin'], function () {
-    Route::any('/','IndexController@index')->name('admin.index');
+    Route::any('/','IndexController@index')->name('admin.index.index');
     Route::post('logout','LoginController@logout')->name('admin.login.logout');
     
 });

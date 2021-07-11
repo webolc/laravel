@@ -11,6 +11,14 @@ class User extends Authenticatable implements JWTSubject
     use HasFactory,Notifiable;
 
     /**
+     * 自定义用户名, 即不使用默认的电子邮件认证
+     * @return string
+     */
+    public function username() {
+        return 'phone';
+    }
+    
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -59,4 +67,5 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+    
 }
